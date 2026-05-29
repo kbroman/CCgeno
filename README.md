@@ -11,3 +11,10 @@ represented.
 Here, we converted the `.hap` files at
 <https://csbio.unc.edu/CCstatus/CCGenomes/> to a genotype probability
 array suitable for use with R/qtl2.
+
+
+
+
+### License
+
+Code licensed under the [MIT license](License.md).
