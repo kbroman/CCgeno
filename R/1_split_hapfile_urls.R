@@ -1,7 +1,7 @@
 # read in hapfiles.txt with URLs for haplotype files
 # split into three sets: seq, mrca, gigamuga
 
-library(broman)
+library(here)
 
 hapfiles <- readLines(here("Hapfiles/hapfiles_orig.txt"))
 mrca <- grep("MRCA", hapfiles)

@@ -1,5 +1,7 @@
 # download all haplotype files
 
+library(here)
+
 urls <- readLines(here("Hapfiles/hapfiles_seq.txt"))
 
 for(file in urls) {
