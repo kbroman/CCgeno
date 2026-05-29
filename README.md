@@ -6,7 +6,9 @@ with [R/qtl2](https://kbroman.org/qtl2).
 
 GigaMUGA data on many strains are provided in standard R/qtl2 input at
 the [qtl2data repository on github](https://github.com/rqtl/qtl2data/tree/main/CC), but not all strains are
-represented.
+represented. (That file contains genotypes on 69 strains; the present
+repository has data on 75 strains; the extra strains are CC078, CC079,
+CC080, CC081, CC082, and CC083.)
 
 Here, we converted the `.hap` files at
 <https://csbio.unc.edu/CCstatus/CCGenomes/> to a genotype probability
