@@ -21,7 +21,7 @@ names(hap) <- sapply(strsplit(files, "-"), "[", 1)
 hap2table <-
     function(h)
 {
-    strain <- strsplit(h[[2]], '["-]')[[1]][2]
+    strain <- strsplit(h[2], '["-]')[[1]][2]
 
     h <- grep("^chr[1-9X]", h, value=TRUE)
 
@@ -47,6 +47,29 @@ hap2table <-
 
     result
 }
+
+# pull out strain, long name, Y and Mt genotypes
+hap2df <-
+    function(h)
+{
+
+    short_strain <- strsplit(h[2], '["-]')[[1]][2]
+    long_strain <- strsplit(h[2], '["]')[[1]][2]
+
+    yline <- grep("^chrY", h, value=TRUE)
+    mline <- grep("^chrM", h, value=TRUE)
+
+    yallele <- strsplit(yline, ",")[[1]][3]
+    mallele <- strsplit(mline, ",")[[1]][3]
+
+    data.frame(strain=short_strain,
+               long_strain=long_strain,
+               Y=yallele, M=mallele)
+}
+
+tab <- lapply(hap, hap2df)
+tab <- do.call("rbind", tab)
+write.table(tab, here("strains_info.csv"), quote=FALSE, sep=",", row.names=FALSE)
 
 haptab <- lapply(hap, hap2table)
 haptab <- do.call("rbind", haptab)
