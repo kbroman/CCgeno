@@ -23,7 +23,18 @@ of the next, we shifted it back so that they didn't overlap.
 The genotype probabilities as well as the map of locations is in
 [`cc_genoprob.RData`](cc_genoprob.RData).
 
+Load them into R by first downloading the file and then using `load()`.
 
+```r
+download.file("https://github.com/kbroman/CCgeno/raw/refs/heads/main/cc_genoprob.RData",
+              "cc_genoprob.RData")
+load("cc_genoprob.RData")
+```
+
+The objects are named `pr` (a list of 3-dimensional arrays, as
+produced by
+(`calc_genoprob()`](https://cran.r-project.org/web/packages/qtl2/refman/qtl2.html#calc_genoprob))
+and `map` (a list of vectors of marker positions).
 
 
 
