@@ -33,7 +33,7 @@ load("cc_genoprob.RData")
 
 The objects are named `pr` (a list of 3-dimensional arrays, as
 produced by
-(`calc_genoprob()`](https://cran.r-project.org/web/packages/qtl2/refman/qtl2.html#calc_genoprob))
+[`calc_genoprob()`](https://cran.r-project.org/web/packages/qtl2/refman/qtl2.html#calc_genoprob))
 and `map` (a list of vectors of marker positions).
 
 
