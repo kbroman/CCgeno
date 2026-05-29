@@ -18,6 +18,15 @@ overlapping haplotypes. If the end of one segment overlapped the start
 of the next, we shifted it back so that they didn't overlap.
 
 
+### Usage
+
+The genotype probabilities as well as the map of locations is in
+[`cc_genoprob.RData`](cc_genoprob.RData).
+
+
+
+
+
 ### License
 
 Code licensed under the [MIT license](License.md).
