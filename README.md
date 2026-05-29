@@ -37,6 +37,10 @@ produced by
 and `map` (a list of vectors of marker positions).
 
 
+The [`strains_info.csv`](strains_info.csv) file contains the long
+version of the strain names, as well as the allele on the Y chromosome
+and the mitochondria.
+
 
 ### License
 
