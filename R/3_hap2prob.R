@@ -30,8 +30,29 @@ hap2table <-
         x <- strsplit(h[i], ",")[[1]]
         chr <- sub("chr", "", x[1])
         allele <- x[seq(3, length(x), by=3)]
-        start <- x[seq(4, length(x), by=3)]
-        end <- x[seq(5, length(x), by=3)]
+        start <- as.numeric(x[seq(4, length(x), by=3)])
+        end <- as.numeric(x[seq(5, length(x), by=3)])
+        if((length(x) - 2) %% 3 != 0)
+            warning("strain ", strain, " chr ", chr, " has unexpected number of values")
+
+        if(length(start) > 1) {
+            for(i in 1:(length(start)-1)) {
+                if(end[i] >= start[i+1]) end[i] <- start[i+1]-1
+            }
+        }
+
+        while(length(start) > 1 && (any(diff(start)<0) || any(diff(end)<0) || any(start > end) || any(end[-length(end)] >= start[-1]))) {
+            omit <- NULL
+            for(i in 1:(length(start)-1)) {
+                if(end[i] >= start[i+1]) end[i] <- start[i+1]-1
+                if(start[i] > end[i]) omit <- c(omit, i)
+            }
+            if(length(omit) > 0) {
+                allele <- allele[-omit]
+                start <- start[-omit]
+                end <- end[-omit]
+            }
+        }
 
         (matpat <- ifelse((i %% 2)==1, "mat", "pat"))
 
@@ -47,6 +68,7 @@ hap2table <-
 
     result
 }
+
 
 # pull out strain, long name, Y and Mt genotypes
 hap2df <-

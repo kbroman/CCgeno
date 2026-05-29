@@ -12,7 +12,10 @@ Here, we converted the `.hap` files at
 <https://csbio.unc.edu/CCstatus/CCGenomes/> to a genotype probability
 array suitable for use with R/qtl2.
 
-
+**Note**: There were a bunch of cases where
+tha haplotype files were internally inconsistent, with sets of
+overlapping haplotypes. If the end of one segment overlapped the start
+of the next, we shifted it back so that they didn't overlap.
 
 
 ### License
