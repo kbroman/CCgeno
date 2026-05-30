@@ -1,9 +1,13 @@
 # convert haplotype files to a matrix of genotype calls
+#
+# This is for the gigamuga files
+# no Y or M genotype information
+# X chr only for the last few samples
 
 library(here)
 
 # read files
-dir <- here("Hapfiles")
+dir <- here("Hapfiles", "GM")
 files <- list.files(dir, pattern=".hap$")
 hap <- lapply(files, function(file) readLines(here(dir, file)))
 names(hap) <- sapply(strsplit(files, "-"), "[", 1)
@@ -12,7 +16,7 @@ names(hap) <- sapply(strsplit(files, "-"), "[", 1)
 hap2table <-
     function(h)
 {
-    strain <- strsplit(h[2], '["-]')[[1]][2]
+    strain <- strsplit(h[2], '["/]')[[1]][2]
 
     h <- grep("^chr[1-9X]", h, value=TRUE)
 
@@ -25,6 +29,10 @@ hap2table <-
         end <- as.numeric(x[seq(5, length(x), by=3)])
         if((length(x) - 2) %% 3 != 0)
             warning("strain ", strain, " chr ", chr, " has unexpected number of values")
+
+        if(length(start) > 1 && (any(diff(start)<0) || any(diff(end)<0) || any(start > end) || any(end[-length(end)] >= start[-1]))) {
+            warning("out of order in strain ", strain, " chr ", chr)
+        }
 
         if(length(start) > 1) {
             for(i in 1:(length(start)-1)) {
@@ -61,70 +69,6 @@ hap2table <-
 }
 
 
-# pull out strain, long name, Y and Mt genotypes
-hap2df <-
-    function(h)
-{
-
-    short_strain <- strsplit(h[2], '["-]')[[1]][2]
-    long_strain <- strsplit(h[2], '["]')[[1]][2]
-
-    yline <- grep("^chrY", h, value=TRUE)
-    mline <- grep("^chrM", h, value=TRUE)
-
-    yallele <- strsplit(yline, ",")[[1]][3]
-    mallele <- strsplit(mline, ",")[[1]][3]
-
-    data.frame(strain=short_strain,
-               long_strain=long_strain,
-               Y=yallele, M=mallele)
-}
-
-tab <- lapply(hap, hap2df)
-tab <- do.call("rbind", tab)
-write.table(tab, here("strains_info.csv"), quote=FALSE, sep=",", row.names=FALSE)
 
 haptab <- lapply(hap, hap2table)
 haptab <- do.call("rbind", haptab)
-
-# find unique positions on each chromosome
-# put a marker between each pair of positions
-hap_upos <-
-    function(ht)
-{
-    allchr <- c(1:19,"X")
-    results <- setNames(vector("list", length(allchr)), allchr)
-
-    for(chr in allchr) {
-        this <- ht[ht$chr==chr,c("start","end")]
-        results[[chr]] <- sort(unique(c(this[,1], this[,2], round((this[,1]+this[,2])/2))))
-        names(results[[chr]]) <- paste0(chr, "@", results[[chr]])
-    }
-    results
-}
-
-upos <- hap_upos(haptab)
-
-# get genotype at each map position
-hap2geno <-
-    function(ht, upos)
-{
-    strains <- unique(ht$strain)
-    pos <- unlist(lapply(upos, names))
-
-    result <- matrix("", nrow=length(strains), ncol=length(pos))
-    dimnames(result) <- list(strains, pos)
-
-    for(i in 1:nrow(ht)) {
-        if(i==round(i,-1)) cat(i, " of ", nrow(ht), "\n")
-        up <- upos[[ ht$chr[i] ]]
-        col <- names(up[up >= ht$start[i] & up <= ht$end[i]])
-        for(j in col) result[ht$strain[i], j] <- paste0(result[ht$strain[i], j], ht$allele[i])
-    }
-
-    result
-}
-
-# get genotype calls
-# g <- hap2geno(haptab, upos)
-# we'll do the work in 4_get_geno_calls.R

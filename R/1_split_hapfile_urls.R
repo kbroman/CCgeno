@@ -21,3 +21,5 @@ table(table(strains_gm))
 
 # save the sequenced hapfiles
 cat(hapfiles[sq], file=here("Hapfiles/hapfiles_seq.txt"), sep="\n")
+cat(hapfiles[mrca], file=here("Hapfiles/hapfiles_mrca.txt"), sep="\n")
+cat(hapfiles[gm], file=here("Hapfiles/hapfiles_gm.txt"), sep="\n")
